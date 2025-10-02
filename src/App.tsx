@@ -49,11 +49,40 @@ export default function ArtworksTable() {
     setPage(e.page ?? 0);
   };
 
-  const selectRowById = () => {
+  const selectRowById = async () => {
     if (rowId != null && rowId > 0) {
-      const numRowsToSelect = Math.min(rowId, artworks.length);
-      const rowsToSelect = artworks.slice(0, numRowsToSelect);
-      setSelectedArtworks(rowsToSelect);
+      const rowsPerPage = 12;
+      const totalRowsToSelect = rowId;
+      const selectedRows: Artwork[] = [];
+      
+      // Calculate how many pages we need to fetch
+      const pagesNeeded = Math.ceil(totalRowsToSelect / rowsPerPage);
+      
+      try {
+        for (let i = 0; i < pagesNeeded; i++) {
+          const pageNumber = i + 1;
+          const res = await fetch(
+            `https://api.artic.edu/api/v1/artworks?page=${pageNumber}`
+          );
+          const data = await res.json();
+          
+          // Calculate how many rows to take from this page
+          const remainingRows = totalRowsToSelect - selectedRows.length;
+          const rowsToTake = Math.min(remainingRows, data.data.length);
+          
+          // Add rows from this page
+          selectedRows.push(...data.data.slice(0, rowsToTake));
+          
+          // If we've selected enough rows, break
+          if (selectedRows.length >= totalRowsToSelect) {
+            break;
+          }
+        }
+        
+        setSelectedArtworks(selectedRows);
+      } catch (error) {
+        console.error("Error fetching artworks for selection:", error);
+      }
       
       setRowId(null);
       if (op.current) {
@@ -78,9 +107,10 @@ export default function ArtworksTable() {
             <InputNumber
               value={rowId}
               onValueChange={(e) => setRowId(e.value ?? null)}
-              placeholder="Enter Row Number"
+              placeholder="Enter number of rows"
+              min={1}
             />
-            <Button label="Select/Deselect" onClick={selectRowById} />
+            <Button label="Submit" onClick={selectRowById} />
           </div>
         </OverlayPanel>
       </div>
@@ -96,7 +126,7 @@ export default function ArtworksTable() {
         onPage={onPageChange}
         loading={loading}
         dataKey="id"
-        selectionMode='checkbox'
+        selectionMode='multiple'
         selection={selectedArtworks}
         onSelectionChange={(e: any) => setSelectedArtworks(e.value)}
       >

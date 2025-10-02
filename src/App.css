@@ -1,42 +1,210 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Modern Table Container */
+.p-datatable {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* Custom checkbox styling with white background and grey border */
+.p-datatable .p-checkbox .p-checkbox-box {
+  background: white !important;
+  border: 2px solid #9ca3af !important;
+  border-radius: 4px;
+  width: 22px !important;
+  height: 22px !important;
+  transition: all 0.2s ease;
+}
+
+.p-datatable .p-checkbox .p-checkbox-box:hover {
+  border-color: #6b7280 !important;
+}
+
+.p-datatable .p-checkbox .p-checkbox-box.p-highlight {
+  background: white !important;
+  border-color: #9ca3af !important;
+}
+
+.p-datatable .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  color: #374151 !important;
+  font-size: 12px;
+}
+
+/* Table Header Styling */
+.p-datatable .p-datatable-thead > tr > th {
+  background: linear-gradient(to bottom, #f9fafb, #f3f4f6) !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  padding: 16px 12px !important;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+
+/* Table Body Styling */
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 14px 12px !important;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 15px;
+  color: #1f2937;
+  border-bottom: 1px solid #f3f4f6 !important;
+  transition: background-color 0.15s ease;
+}
+
+/* Row Hover Effect */
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #f9fafb !important;
+}
+
+/* Selected Row Styling */
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background-color: #eef2ff !important;
+  border-left: 3px solid #6366f1;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight:hover {
+  background-color: #e0e7ff !important;
+}
+
+/* Empty Message Styling */
+.p-datatable .p-datatable-emptymessage > td {
   text-align: center;
+  padding: 40px 20px !important;
+  color: #9ca3af;
+  font-size: 16px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Loading Overlay */
+.p-datatable .p-datatable-loading-overlay {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(4px);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Paginator Styling */
+.p-paginator {
+  background: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 16px 12px !important;
+  border-radius: 0 0 12px 12px;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  margin: 0 2px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background: #e0e7ff !important;
+  color: #4f46e5 !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #6366f1 !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.p-paginator .p-paginator-first:hover,
+.p-paginator .p-paginator-prev:hover,
+.p-paginator .p-paginator-next:hover,
+.p-paginator .p-paginator-last:hover {
+  background: #e5e7eb !important;
+}
+
+/* Scrollbar Styling */
+.p-datatable .p-datatable-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.p-datatable .p-datatable-wrapper::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.p-datatable .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.p-datatable .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Responsive text sizing */
+@media (max-width: 1024px) {
+  .p-datatable .p-datatable-tbody > tr > td {
+    font-size: 14px;
+    padding: 12px 10px !important;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .p-datatable .p-datatable-thead > tr > th {
+    font-size: 13px;
+    padding: 14px 10px !important;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 768px) {
+  .p-datatable {
+    border-radius: 8px;
+  }
+
+  .p-datatable .p-datatable-tbody > tr > td {
+    font-size: 13px;
+    padding: 10px 8px !important;
+  }
+  
+  .p-datatable .p-datatable-thead > tr > th {
+    font-size: 12px;
+    padding: 12px 8px !important;
+  }
+
+  .p-paginator {
+    padding: 12px 8px !important;
+  }
+
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 }
 
-.card {
-  padding: 2em;
-}
+@media (max-width: 480px) {
+  .p-datatable .p-datatable-tbody > tr > td {
+    font-size: 12px;
+    padding: 8px 6px !important;
+  }
+  
+  .p-datatable .p-datatable-thead > tr > th {
+    font-size: 11px;
+    padding: 10px 6px !important;
+  }
 
-.read-the-docs {
-  color: #888;
+  .p-checkbox .p-checkbox-box {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
 }
