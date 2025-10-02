@@ -18,41 +18,49 @@ interface Artwork {
 
 export default function ArtworksTable() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [totalRecords, setTotalRecords] = useState(0);
   const [selectedArtworks, setSelectedArtworks] = useState<Artwork[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [rowClick, setRowClick] = useState(true);
+
 
   const op = useRef<OverlayPanel>(null);
   const [rowId, setRowId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `https://api.artic.edu/api/v1/artworks?page=${page}`
-      );
-      const data = await res.json();
-      setArtworks(data.data);
-      setTotalRecords(data.pagination.total);
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `https://api.artic.edu/api/v1/artworks?page=${page + 1}`
+        );
+        const data = await res.json();
+        setArtworks(data.data);
+        setTotalRecords(data.pagination.total);
+      } catch (error) {
+        console.error("Error fetching artworks:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, [page]);
 
   const onPageChange = (e: DataTableStateEvent) => {
-    setPage((e.page || 0) + 1);
+    setPage(e.page ?? 0);
   };
 
   const selectRowById = () => {
-    if (rowId !== null) {
-      const target = artworks.find((a) => a.id === rowId);
-      if (target) {
-        if (selectedArtworks.some((a) => a.id === rowId)) {
-          setSelectedArtworks((prev) => prev.filter((a) => a.id !== rowId));
-        } else {
-          setSelectedArtworks((prev) => [...prev, target]);
-        }
-      }
+    if (rowId != null && rowId > 0) {
+      const numRowsToSelect = Math.min(rowId, artworks.length);
+      const rowsToSelect = artworks.slice(0, numRowsToSelect);
+      setSelectedArtworks(rowsToSelect);
+
       setRowId(null);
-      op.current?.hide();
+      if (op.current) {
+        op.current.hide();
+      }
     }
   };
 
@@ -60,10 +68,11 @@ export default function ArtworksTable() {
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Artworks</h1>
 
-      <div className="flex gap-2 mb-3">
+      <div className="card flex justify-content-start mb-3">
         <Button
-          label="Select by ID"
+          type="button"
           icon="pi pi-angle-down"
+          label="Select Row"
           onClick={(e) => op.current?.toggle(e)}
         />
         <OverlayPanel ref={op}>
@@ -71,32 +80,36 @@ export default function ArtworksTable() {
             <InputNumber
               value={rowId}
               onValueChange={(e) => setRowId(e.value ?? null)}
-              placeholder="Enter Artwork ID"
+              placeholder="Enter number of rows"
+              min={1}
             />
-            <Button label="Select/Deselect" onClick={selectRowById} />
+            <Button label="Submit" onClick={selectRowById} />
           </div>
         </OverlayPanel>
       </div>
 
       <DataTable
         value={artworks}
+        lazy
         paginator
-        rows={12} 
+        rows={12}
+        first={page * 12}
+        tableStyle={{ minWidth: '50rem' }}
         totalRecords={totalRecords}
         onPage={onPageChange}
-        lazy
+        loading={loading}
         dataKey="id"
-        selectionMode="checkbox"
+        selectionMode={rowClick ? null : 'checkbox'}
         selection={selectedArtworks}
-        onSelectionChange={(e) => setSelectedArtworks(e.value)}
+        onSelectionChange={(e: any) => setSelectedArtworks(e.value)}
       >
-        <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
-        <Column field="title" header="Title" />
-        <Column field="place_of_origin" header="Origin" />
-        <Column field="artist_display" header="Artist" />
-        <Column field="inscriptions" header="Inscriptions" />
-        <Column field="date_start" header="Start Date" />
-        <Column field="date_end" header="End Date" />
+        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+        <Column field="title" header="Title" style={{ width: '25%' }} />
+        <Column field="place_of_origin" header="Origin" style={{ width: '25%' }} />
+        <Column field="artist_display" header="Artist" style={{ width: '25%' }} />
+        <Column field="inscriptions" header="Inscriptions" style={{ width: '25%' }} />
+        <Column field="date_start" header="Start Date" style={{ width: '25%' }} />
+        <Column field="date_end" header="End Date" style={{ width: '25%' }} />
       </DataTable>
     </div>
   );
