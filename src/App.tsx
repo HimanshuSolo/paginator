@@ -22,8 +22,6 @@ export default function ArtworksTable() {
   const [totalRecords, setTotalRecords] = useState(0);
   const [selectedArtworks, setSelectedArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(false);
-  const [rowClick, setRowClick] = useState(true);
-
 
   const op = useRef<OverlayPanel>(null);
   const [rowId, setRowId] = useState<number | null>(null);
@@ -56,7 +54,7 @@ export default function ArtworksTable() {
       const numRowsToSelect = Math.min(rowId, artworks.length);
       const rowsToSelect = artworks.slice(0, numRowsToSelect);
       setSelectedArtworks(rowsToSelect);
-
+      
       setRowId(null);
       if (op.current) {
         op.current.hide();
@@ -80,10 +78,9 @@ export default function ArtworksTable() {
             <InputNumber
               value={rowId}
               onValueChange={(e) => setRowId(e.value ?? null)}
-              placeholder="Enter number of rows"
-              min={1}
+              placeholder="Enter Row Number"
             />
-            <Button label="Submit" onClick={selectRowById} />
+            <Button label="Select/Deselect" onClick={selectRowById} />
           </div>
         </OverlayPanel>
       </div>
@@ -99,7 +96,7 @@ export default function ArtworksTable() {
         onPage={onPageChange}
         loading={loading}
         dataKey="id"
-        selectionMode={rowClick ? null : 'checkbox'}
+        selectionMode='checkbox'
         selection={selectedArtworks}
         onSelectionChange={(e: any) => setSelectedArtworks(e.value)}
       >
