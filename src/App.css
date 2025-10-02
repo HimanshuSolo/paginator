@@ -129,7 +129,6 @@
   background: #e5e7eb !important;
 }
 
-/* Scrollbar Styling */
 .p-datatable .p-datatable-wrapper::-webkit-scrollbar {
   height: 8px;
 }
@@ -147,7 +146,6 @@
   background: #9ca3af;
 }
 
-/* Responsive text sizing */
 @media (max-width: 1024px) {
   .p-datatable .p-datatable-tbody > tr > td {
     font-size: 14px;

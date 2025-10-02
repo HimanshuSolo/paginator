@@ -55,7 +55,6 @@ export default function ArtworksTable() {
       const totalRowsToSelect = rowId;
       const selectedRows: Artwork[] = [];
       
-      // Calculate how many pages we need to fetch
       const pagesNeeded = Math.ceil(totalRowsToSelect / rowsPerPage);
       
       try {
@@ -66,14 +65,11 @@ export default function ArtworksTable() {
           );
           const data = await res.json();
           
-          // Calculate how many rows to take from this page
           const remainingRows = totalRowsToSelect - selectedRows.length;
           const rowsToTake = Math.min(remainingRows, data.data.length);
           
-          // Add rows from this page
           selectedRows.push(...data.data.slice(0, rowsToTake));
           
-          // If we've selected enough rows, break
           if (selectedRows.length >= totalRowsToSelect) {
             break;
           }
